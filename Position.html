@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANIWA Production Control - Main Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f4f6f9;
+            color: #222;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header {
+            background: #26364d;
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-radius: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            font-size: 1rem;
+            color: #dcdfe6;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .btn-link {
+            background: #ffffff;
+            color: #26364d;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #dcdfe6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-link:hover {
+            background: #26364d;
+            color: #ffffff;
+        }
+
+        /* ตารางปรับตามขนาดหน้าจอ */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            width: 100%;
+            align-items: start;
+        }
+
+        .card-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ดีไซน์การ์ดหลัก */
+        .btn-card {
+            background: #ffffff;
+            border: 2px solid #dcdfe6;
+            border-radius: 14px;
+            padding: 30px 20px;
+            text-align: center;
+            color: #26364d;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-card .icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .btn-card .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-card .subtitle {
+            font-size: 0.9rem;
+            margin-top: 6px;
+            opacity: 0.75;
+        }
+
+        .btn-card .arrow-icon {
+            font-size: 0.9rem;
+            margin-top: 12px;
+            transition: transform 0.3s ease;
+            opacity: 0.6;
+        }
+
+        /* หมุนลูกศรเมื่อเปิดเมนู */
+        .card-group.active .btn-card .arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        /* สีไฮไลต์การ์ดเมื่อกดเปิด */
+        .card-group.core.active .btn-card { background: #ed8585; border-color: #ed8585; color: white; }
+        .card-group.melting.active .btn-card { background: #ff9800; border-color: #ff9800; color: white; }
+        .card-group.diecast.active .btn-card { background: #0288d1; border-color: #0288d1; color: white; }
+        .card-group.cutting.active .btn-card { background: #2e7d32; border-color: #2e7d32; color: white; }
+
+        /* ส่วนข้อย่อย Accordion */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.3s ease;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .submenu.open {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        .sub-item {
+            background: #ffffff;
+            border: 1px solid #dcdfe6;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #26364d;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Hover สีเมนูปุ่มย่อยตามหมวดหมู่ */
+        .card-group.core .sub-item:hover { background: #ed8585; color: white; border-color: #ed8585; }
+        .card-group.melting .sub-item:hover { background: #ff9800; color: white; border-color: #ff9800; }
+        .card-group.diecast .sub-item:hover { background: #0288d1; color: white; border-color: #0288d1; }
+        .card-group.cutting .sub-item:hover { background: #2e7d32; color: white; border-color: #2e7d32; }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>COTTO Foundry Shop</h1>
+            <p>เลือกระบบงานที่ต้องการบันทึก / ตรวจสอบข้อมูล</p>
+        </header>
+
+        <div class="action-bar">
+            <a href="index.html" class="btn-link">🏠 หน้าหลัก</a>
+        </div>
+
+        <div class="menu-grid">
+
+            <!-- 1. ปุ่ม Core -->
+            <div class="card-group core">
+                <div class="btn-card" onclick="toggleSubmenu('core-sub', this)">
+                    <div class="icon">🧱</div>
+                    <div class="title">Core</div>
+                    <div class="subtitle">ระบบบันทึกผลผลิต Core</div>
+                    <div class="arrow-icon">▼</div>
+                </div>
+                <div id="core-sub" class="submenu">
+                    <a href="core_record.html" class="sub-item">📝 บันทึกผลผลิต Core</a>
+                    <a href="Core Part.html" class="sub-item">🔍 ตรวจสอบข้อมูล Core</a>
+                    <a href="ข้อมูล Core.html" class="sub-item">📊 บันทึกข้อมูล Core</a>
+                </div>
+            </div>
+
+            <!-- 2. ปุ่ม Melting -->
+            <div class="card-group melting">
+                <div class="btn-card" onclick="toggleSubmenu('melting-sub', this)">
+                    <div class="icon">🔥</div>
+                    <div class="title">Melting</div>
+                    <div class="subtitle">ระบบบันทึกการหลอมเหลว</div>
+                    <div class="arrow-icon">▼</div>
+                </div>
+                <div id="melting-sub" class="submenu">
+                    <a href="melting_record.html" class="sub-item">📝 บันทึกการหลอม</a>
+                    <a href="melting_check.html" class="sub-item">🔍 ตรวจสอบข้อมูล Melting</a>
+                    <a href="melting_report.html" class="sub-item">📊 รายงานการหลอมเหลว</a>
+                </div>
+            </div>
+
+            <!-- 3. ปุ่ม Die cast -->
+            <div class="card-group diecast">
+                <div class="btn-card" onclick="toggleSubmenu('diecast-sub', this)">
+                    <div class="icon">⚙️</div>
+                    <div class="title">Die cast</div>
+                    <div class="subtitle">ระบบบันทึกงานหล่อ</div>
+                    <div class="arrow-icon">▼</div>
+                </div>
+                <div id="diecast-sub" class="submenu">
+                    <a href="diecast_record.html" class="sub-item">📝 บันทึกงานหล่อ</a>
+                    <a href="diecast_check.html" class="sub-item">🔍 ตรวจสอบข้อมูล Die cast</a>
+                    <a href="diecast_report.html" class="sub-item">📊 รายงานผลงานหล่อ</a>
+                </div>
+            </div>
+
+            <!-- 4. ปุ่ม Cutting -->
+            <div class="card-group cutting">
+                <div class="btn-card" onclick="toggleSubmenu('cutting-sub', this)">
+                    <div class="icon">✂️</div>
+                    <div class="title">Cutting</div>
+                    <div class="subtitle">ระบบบันทึกการตัด/ตัดแต่ง</div>
+                    <div class="arrow-icon">▼</div>
+                </div>
+                <div id="cutting-sub" class="submenu">
+                    <a href="cutting_record.html" class="sub-item">📝 บันทึกงานตัดแต่ง</a>
+                    <a href="cutting_check.html" class="sub-item">🔍 ตรวจสอบข้อมูล Cutting</a>
+                    <a href="cutting_report.html" class="sub-item">📊 รายงานการตัดแต่ง</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSubmenu(submenuId, element) {
+            const targetSubmenu = document.getElementById(submenuId);
+            const parentGroup = element.closest('.card-group');
+
+            // สลับสถานะเปิด/ปิดของปุ่มที่ถูกคลิก
+            const isOpen = targetSubmenu.classList.contains('open');
+
+            // ปิดรายการอื่นทั้งหมดก่อน (ถ้าต้องการเปิดทีละรายการ)
+            document.querySelectorAll('.submenu').forEach(menu => menu.classList.remove('open'));
+            document.querySelectorAll('.card-group').forEach(group => group.classList.remove('active'));
+
+            // หากปุ่มที่คลิกยังไม่เปิด ให้ทำการเปิด
+            if (!isOpen) {
+                targetSubmenu.classList.add('open');
+                parentGroup.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

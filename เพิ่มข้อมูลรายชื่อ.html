@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการข้อมูลพนักงาน และ จุดจอดรถ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
+        body { background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        .top-barr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ปรับแต่งปุ่มนำทางให้ตรงกับหน้าอื่น */
+        .btn-nav {
+            background: #ffffff;
+            color: #26364d;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #dcdfe6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav:hover {
+            background: #26364d;
+            color: #ffffff;
+            border-color: #26364d;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 1024px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card h2 { margin-top: 0; color: #26364d; border-bottom: 2px solid #ed8585; padding-bottom: 8px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group.full-width { grid-column: span 2; }
+        
+        label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 14px; }
+        input, select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-add { background: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.2s; }
+        .btn-add:hover { background: #1b5e20; }
+        .btn-cancel { background: #757575; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; display: none; width: 40%; }
+        .btn-cancel:hover { background: #616161; }
+
+        /* แถบสรุปจำนวนคน */
+        .summary-bar {
+            background: #eef2f6;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .summary-item { color: #26364d; display: flex; align-items: center; gap: 5px; }
+        .summary-item span { color: #d32f2f; font-size: 17px; }
+
+        .table-wrapper { overflow-x: auto; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; min-width: 750px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 13px; }
+        th { background: #f0f4f8; color: #26364d; }
+        
+        .btn-edit { background: #ffa000; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; margin-right: 3px; font-weight: bold; }
+        .btn-edit:hover { background: #ff8f00; }
+        .btn-del { background: #e53935; color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-del:hover { background: #c62828; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-barr">
+        <a href="index.html" class="btn-nav">⬅ หน้าหลัก</a>
+      <!--  <a href="กรอกOT.html" class="btn-nav">📝 หน้าบันทึก OT / เวลาทำงาน </a>-->
+    </div>
+
+    <div class="grid-2">
+        <!-- 1. เพิ่ม/จัดการฐานข้อมูลประชากร -->
+        <div class="card">
+            <h2>👤 จัดการฐานข้อมูลประชากร (พนักงาน / ผู้รับเหมา)</h2>
+            <form id="personForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>เลขประจำตัว:</label>
+                        <input type="text" id="empId" required placeholder="เช่น 1234">
+                    </div>
+                    <div class="form-group">
+                        <label>ประเภท:</label>
+                        <select id="empType" required>
+                            <option value="พนักงาน">พนักงาน</option>
+                            <option value="ผู้รับเหมา">ผู้รับเหมา</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อ - สกุล:</label>
+                        <input type="text" id="empName" required placeholder="เช่น สมชาย ใจดี">
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อเล่น:</label>
+                        <input type="text" id="empNickname" placeholder="เช่น ชาย">
+                    </div>
+                    <div class="form-group">
+                        <label>เบอร์โทรศัพท์:</label>
+                        <input type="tel" id="empPhone" placeholder="เช่น 0812345678">
+                    </div>
+                    <div class="form-group">
+                        <label>จุดงาน / แผนก:</label>
+                        <input type="text" id="empWorkSite" placeholder="เช่น ไลน์ผลิต A, คลังสินค้า">
+                    </div>
+                    <div class="form-group">
+                        <label>วันเดือนปีเกิด:</label>
+                        <input type="date" id="empDob" onchange="autoCalculateAge()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>อายุ (ปี):</label>
+                        <input type="text" id="empAge" readonly placeholder="คำนวณให้อัตโนมัติ">
+                    </div>
+                    <div class="form-group">
+                        <label>วันเข้างาน:</label>
+                        <input type="date" id="empStartDate" onchange="autoCalculateTenure()" required>
+                    </div>
+                    <div class="form-group">
+                        <label>อายุงาน:</label>
+                        <input type="text" id="empTenure" readonly placeholder="คำนวณให้อัตโนมัติ">
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" id="btnSubmitPerson" class="btn-add">+ บันทึกรายชื่อประชากร</button>
+                    <button type="button" id="btnCancelPerson" class="btn-cancel" onclick="cancelEdit()">❌ ยกเลิก</button>
+                </div>
+            </form>
+
+            <h3 style="margin-top:20px; margin-bottom: 5px;">รายชื่อในฐานข้อมูล</h3>
+
+            <!-- แถบสรุปจำนวนประชากร -->
+            <div class="summary-bar">
+                <div class="summary-item">👔 พนักงาน: <span id="cntEmp">0</span> คน</div>
+                <div class="summary-item">👷 ผู้รับเหมา: <span id="cntContractor">0</span> คน</div>
+                <div class="summary-item">👥 รวมทั้งหมด: <span id="cntTotal">0</span> คน</div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>รหัส</th>
+                            <th>ชื่อ-สกุล (ชื่อเล่น)</th>
+                            <th>จุดงาน</th>
+                            <th>โทร</th>
+                            <th>วันเกิด (อายุ)</th>
+                            <th>วันเข้างาน (อายุงาน)</th>
+                            <th>ประเภท</th>
+                            <th style="width: 110px;">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. เพิ่มจุดจอดรถใหม่ -->
+        <div class="card">
+            <h2>🚌 เพิ่มจุดจอดรถ รับ-ส่ง</h2>
+            <form id="busForm">
+                <div class="form-group">
+                    <label>ชื่อจุดจอดรถ:</label>
+                    <input type="text" id="busStopName" required placeholder="เช่น จุดที่ 1 หน้าโรงงาน">
+                </div>
+                <button type="submit" class="btn-add">+ บันทึกจุดจอดรถ</button>
+            </form>
+
+            <h3 style="margin-top:20px;">จุดจอดรถในระบบ</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ลำดับ</th>
+                            <th>จุดจอดรถ</th>
+                            <th style="width: 60px;">ลบ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="busTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let editIndex = -1;
+
+    // ดึงข้อมูล Master จาก LocalStorage
+    let persons = JSON.parse(localStorage.getItem('master_persons')) || [
+        { id: '1234', name: 'สมชาย ใจดี', nickname: 'ชาย', phone: '0812345678', workSite: 'ไลน์ผลิต A', dob: '1990-05-15', age: 36, startDate: '2020-01-15', type: 'พนักงาน' },
+        { id: '1235', name: 'สมศรี มีตา', nickname: 'ศรี', phone: '0898765432', workSite: 'คลังสินค้า', dob: '1995-10-20', age: 30, startDate: '2022-03-01', type: 'ผู้รับเหมา' }
+    ];
+    let busStops = JSON.parse(localStorage.getItem('master_bus_stops')) || ['หน้าโรงงาน', 'ตลาดสด', 'สี่แยก'];
+
+    // ฟังก์ชันคำนวณอายุจาก วันเดือนปีเกิด
+    function calcAge(dobString) {
+        if (!dobString) return '';
+        const birthDate = new Date(dobString);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 0 ? age : 0;
+    }
+
+    // ฟังก์ชันคำนวณอายุงาน (ปี และ เดือน)
+    function calcTenure(startDateString) {
+        if (!startDateString) return '-';
+        const start = new Date(startDateString);
+        const today = new Date();
+
+        let years = today.getFullYear() - start.getFullYear();
+        let months = today.getMonth() - start.getMonth();
+        let days = today.getDate() - start.getDate();
+
+        if (days < 0) months--;
+        if (months < 0) {
+            years--;
+            months += 12;
+        }
+
+        if (years < 0) return 'ยังไม่ถึงวันเริ่มงาน';
+
+        let tenureText = '';
+        if (years > 0) tenureText += `${years} ปี `;
+        if (months > 0) tenureText += `${months} เดือน`;
+        if (years === 0 && months === 0) tenureText = 'น้อยกว่า 1 เดือน';
+
+        return tenureText;
+    }
+
+    function autoCalculateAge() {
+        const dobVal = document.getElementById('empDob').value;
+        document.getElementById('empAge').value = dobVal ? calcAge(dobVal) : '';
+    }
+
+    function autoCalculateTenure() {
+        const startVal = document.getElementById('empStartDate').value;
+        document.getElementById('empTenure').value = startVal ? calcTenure(startVal) : '';
+    }
+
+    // แปลงรูปแบบวันที่เป็น DD/MM/YYYY
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${parseInt(year) + 543}`;
+    }
+
+    function renderTables() {
+        let empCount = 0;
+        let contractorCount = 0;
+
+        const pTable = document.getElementById('personTable');
+        pTable.innerHTML = persons.map((p, index) => {
+            if (p.type === 'พนักงาน') empCount++;
+            if (p.type === 'ผู้รับเหมา') contractorCount++;
+
+            const displayName = p.nickname ? `${p.name} (${p.nickname})` : p.name;
+            const displayAge = p.dob ? `${formatDate(p.dob)} (${p.age || calcAge(p.dob)} ปี)` : '-';
+            const displayTenure = p.startDate ? `${formatDate(p.startDate)}<br><small style="color:#2e7d32; font-weight:bold;">(${calcTenure(p.startDate)})</small>` : '-';
+            
+            return `
+                <tr>
+                    <td>${p.id}</td>
+                    <td style="text-align:left;">${displayName}</td>
+                    <td>${p.workSite || '-'}</td>
+                    <td>${p.phone || '-'}</td>
+                    <td>${displayAge}</td>
+                    <td>${displayTenure}</td>
+                    <td>${p.type}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editPerson(${index})">แก้ไข</button>
+                        <button class="btn-del" onclick="deletePerson(${index})">ลบ</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // อัปเดตตัวเลขสรุป
+        document.getElementById('cntEmp').textContent = empCount;
+        document.getElementById('cntContractor').textContent = contractorCount;
+        document.getElementById('cntTotal').textContent = persons.length;
+
+        // Render จุดจอดรถ
+        const bTable = document.getElementById('busTable');
+        bTable.innerHTML = busStops.map((b, index) => `
+            <tr>
+                <td>${index + 1}</td>
+                <td style="text-align:left;">${b}</td>
+                <td><button class="btn-del" onclick="deleteBusStop(${index})">ลบ</button></td>
+            </tr>
+        `).join('');
+
+        // บันทึกข้อมูลลง LocalStorage
+        localStorage.setItem('master_persons', JSON.stringify(persons));
+        localStorage.setItem('master_bus_stops', JSON.stringify(busStops));
+    }
+
+    // ฟังก์ชันเข้าสู่โหมดแก้ไขข้อมูล
+    function editPerson(index) {
+        editIndex = index;
+        const p = persons[index];
+
+        document.getElementById('empId').value = p.id;
+        document.getElementById('empName').value = p.name;
+        document.getElementById('empNickname').value = p.nickname || '';
+        document.getElementById('empPhone').value = p.phone || '';
+        document.getElementById('empWorkSite').value = p.workSite || '';
+        document.getElementById('empStartDate').value = p.startDate || '';
+        document.getElementById('empDob').value = p.dob || '';
+        document.getElementById('empType').value = p.type;
+        
+        autoCalculateAge();
+        autoCalculateTenure();
+
+        const btnSubmit = document.getElementById('btnSubmitPerson');
+        btnSubmit.textContent = '💾 อัปเดตข้อมูลรายชื่อ';
+        btnSubmit.style.backgroundColor = '#1976d2';
+        document.getElementById('btnCancelPerson').style.display = 'block';
+
+        document.getElementById('personForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ยกเลิกการแก้ไข
+    function cancelEdit() {
+        editIndex = -1;
+        document.getElementById('personForm').reset();
+        document.getElementById('empAge').value = '';
+        document.getElementById('empTenure').value = '';
+
+        const btnSubmit = document.getElementById('btnSubmitPerson');
+        btnSubmit.textContent = '+ บันทึกรายชื่อประชากร';
+        btnSubmit.style.backgroundColor = '#2e7d32';
+        document.getElementById('btnCancelPerson').style.display = 'none';
+    }
+
+    // บันทึก / อัปเดตข้อมูลคน
+    document.getElementById('personForm').onsubmit = (e) => {
+        e.preventDefault();
+        const dobVal = document.getElementById('empDob').value;
+        const startVal = document.getElementById('empStartDate').value;
+
+        const personData = {
+            id: document.getElementById('empId').value,
+            name: document.getElementById('empName').value,
+            nickname: document.getElementById('empNickname').value,
+            phone: document.getElementById('empPhone').value,
+            workSite: document.getElementById('empWorkSite').value,
+            dob: dobVal,
+            age: calcAge(dobVal),
+            startDate: startVal,
+            type: document.getElementById('empType').value
+        };
+
+        if (editIndex === -1) {
+            persons.push(personData);
+        } else {
+            persons[editIndex] = personData;
+        }
+
+        cancelEdit();
+        renderTables();
+    };
+
+    // บันทึกจุดจอดรถใหม่
+    document.getElementById('busForm').onsubmit = (e) => {
+        e.preventDefault();
+        busStops.push(document.getElementById('busStopName').value);
+        document.getElementById('busForm').reset();
+        renderTables();
+    };
+
+    function deletePerson(index) {
+        if (confirm("คุณต้องการลบรายชื่อนี้ใช่หรือไม่?")) {
+            if (editIndex === index) {
+                cancelEdit();
+            } else if (editIndex > index) {
+                editIndex--;
+            }
+            persons.splice(index, 1);
+            renderTables();
+        }
+    }
+
+    function deleteBusStop(index) {
+        if (confirm("คุณต้องการลบจุดจอดรถนี้ใช่หรือไม่?")) {
+            busStops.splice(index, 1);
+            renderTables();
+        }
+    }
+
+    // แสดงผลข้อมูลครั้งแรก
+    renderTables();
+</script>
+
+</body>
+</html>

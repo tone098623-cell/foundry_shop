@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก - COTTO Foundry Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
+        body { background: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px 20px; }
+        .auth-card { background: white; padding: 35px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: 100%; max-width: 480px; border-top: 5px solid #26364d; }
+        .auth-header { text-align: center; margin-bottom: 25px; }
+        .auth-header h2 { color: #26364d; font-size: 22px; font-weight: 700; margin-bottom: 5px; }
+        .auth-header p { color: #666; font-size: 14px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-group { margin-bottom: 16px; flex: 1; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: #26364d; }
+        .btn-submit { width: 100%; background: #1e7e34; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .btn-submit:hover { background: #145523; }
+        .auth-footer { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+        .auth-footer a { color: #1976d2; text-decoration: none; font-weight: 600; }
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>ลงทะเบียนผู้ใช้งานใหม่</h2>
+            <p>ระบบบันทึกข้อมูลการผลิต COTTO Foundry Shop</p>
+        </div>
+
+        <form action="login.html" method="GET">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="empId">🪪 รหัสพนักงาน</label>
+                    <input type="text" id="empId" name="empId" placeholder="เช่น 561234" required>
+                </div>
+                <div class="form-group">
+                    <label for="empType">👤 ประเภทบุคลากร</label>
+                    <select id="empType" name="empType" required>
+                        <option value="พนักงาน">พนักงาน</option>
+                        <option value="ผู้รับเหมา">ผู้รับเหมา</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fullname">📝 ชื่อ - นามสกุล</label>
+                <input type="text" id="fullname" name="fullname" placeholder="นายสมชาย ใจดี" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">📧 อีเมล</label>
+                <input type="email" id="email" name="email" placeholder="example@scg.com" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">🔒 รหัสผ่าน</label>
+                    <input type="password" id="password" name="password" placeholder="ตั้งรหัสผ่าน" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">🔒 ยืนยันรหัสผ่าน</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">✅ ยืนยันการลงทะเบียน</button>
+        </form>
+
+        <div class="auth-footer">
+            มีบัญชีผู้ใช้งานอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

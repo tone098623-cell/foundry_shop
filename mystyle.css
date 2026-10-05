@@ -1,0 +1,137 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+/* Style the header */
+header {
+  background-color: #f08d8d;
+  padding: 20px;
+  text-align: center;
+  font-size: 2rem;
+  color: white;
+}
+
+/* Create two columns that float next to each other */
+nav {
+  float: left;
+  width: 30%;
+  background: #ccc;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+article {
+  float: left;
+  padding: 20px;
+  width: 70%;
+  background-color: #f1f1f1;
+}
+
+/* Clear floats after the columns */
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* mouse over link */
+a:hover {
+  color: red;
+}
+
+/* Style the footer */
+footer {
+  background-color: #777;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  clear: both; /* เพิ่มป้องกัน float ดัน footer เบี้ยว */
+}
+    /* แถบควบคุมด้านบน */
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #ffffff;
+        padding: 15px 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    /* ปุ่มกลับหน้าแรก (ขนาดใหญ่ เด่นชัด) */
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: #ffffff;
+        padding: 14px 28px; /* ปรับขนาดความกว้าง-สูงของปุ่ม */
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 1.15rem; /* ขนาดตัวอักษรใหญ่ชัดเจน */
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px rgba(30, 60, 114, 0.25);
+        transition: all 0.25s ease-in-out;
+    }
+
+    /* เอฟเฟกต์เมื่อเอาเมาส์ชี้ (Hover) */
+    .btn-back:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(30, 60, 114, 0.35);
+        background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+        color: #ffffff;
+    }
+
+    .btn-back:active {
+        transform: translateY(-1px);
+    }
+
+    /* ขนาดไอคอน */
+    .btn-back .icon {
+        font-size: 1.3rem;
+    }
+
+    /* ข้อความชื่อหน้า (ตัวเลือกเสริม) */
+    .top-bar-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #26364d;
+    }
+
+    /* รองรับมือถือ */
+    @media (max-width: 600px) {
+        .top-bar {
+            padding: 12px 15px;
+        }
+        .btn-back {
+            width: 100%; /* แสดงเต็มจอในมือถือ */
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+    }
+    
+
+
+/* Responsive layout */
+@media (max-width: 800px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}

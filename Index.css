@@ -1,0 +1,239 @@
+/* ==============================================
+   1. ตั้งค่าพื้นฐาน และ ตัวแปรสี (CSS Variables)
+============================================== */
+:root {
+    --primary-color: #b32f2f;       /* สีแดง COTTO หลัก */
+    --primary-hover: #b71c1c;       /* สีแดงเข้มเมื่อ Hover */
+    --bg-body: #f8fafc;             /* สีพื้นหลังหน้าเว็บ */
+    --bg-card: #ffffff;             /* สีพื้นหลังการ์ด */
+    --text-main: #1e293b;           /* สีตัวอักษรหลัก */
+    --text-muted: #64748b;          /* สีตัวอักษรรอง */
+    --border-color: #e2e8f0;        /* สีเส้นขอบ */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Sarabun', Arial, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* ==============================================
+   2. HEADER
+============================================== */
+.main-header {
+    background: linear-gradient(135deg, #d32f2f 0%, #9a0007 100%);
+    color: #ffffff;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
+}
+
+.main-header h2 {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.main-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 300;
+    margin-top: 5px;
+}
+
+/* ==============================================
+   3. LAYOUT CONTAINER
+============================================== */
+.main-container {
+    display: flex;
+    width: 100%;
+    max-width: 1280px;
+    margin: 30px auto;
+    padding: 0 20px;
+    gap: 25px;
+    flex: 1;
+}
+
+/* ==============================================
+   4. SIDEBAR NAVIGATION
+============================================== */
+.sidebar-nav {
+    width: 280px;
+    background-color: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+    height: fit-content;
+}
+
+.menu-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 1.2rem;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #f8fafc;
+    color: var(--text-main);
+    font-size: 0.98rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.25s ease-in-out;
+}
+
+.nav-link .icon {
+    font-size: 1.2rem;
+}
+
+.nav-link:hover {
+    background-color: #ffebee;
+    color: var(--primary-color);
+    border-color: #ffcdd2;
+    transform: translateX(4px);
+}
+
+/* เมนูหน้าที่เปิดอยู่ (Active State) */
+.nav-link.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(211, 47, 47, 0.25);
+}
+
+.nav-link.active:hover {
+    background-color: var(--primary-hover);
+    color: #ffffff;
+    transform: none;
+}
+
+/* ==============================================
+   5. CONTENT AREA (ARTICLE)
+============================================== */
+.content-area {
+    flex: 1;
+}
+
+.welcome-card {
+    background-color: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.welcome-card h1 {
+    font-size: 1.8rem;
+    color: var(--text-main);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.welcome-card h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    
+    border-radius: 2px;
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 25px 0;
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px dashed var(--border-color);
+}
+
+.logo-wrapper img {
+    max-width: 100%;
+    height: auto;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.info-box {
+    background-color: #fff8f8;
+    border-left: 4px solid var(--primary-color);
+    padding: 15px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 20px;
+}
+
+.info-box strong {
+    color: var(--primary-color);
+    font-size: 1.05rem;
+}
+
+.info-box p {
+    margin-top: 5px;
+    color: var(--text-muted);
+}
+
+/* ==============================================
+   6. FOOTER
+============================================== */
+.main-footer {
+    background-color: #0f172a;
+    color: #94a3b8;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    margin-top: auto;
+}
+
+/* ==============================================
+   7. RESPONSIVE DESIGN (หน้าจอเล็ก/มือถือ)
+============================================== */
+@media screen and (max-width: 850px) {
+    .main-container {
+        flex-direction: column;
+        margin: 15px auto;
+        padding: 0 15px;
+    }
+
+    .sidebar-nav {
+        width: 100%;
+    }
+
+    .welcome-card {
+        padding: 1.5rem;
+    }
+}

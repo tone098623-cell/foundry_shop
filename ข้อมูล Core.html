@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฐานข้อมูลการผลิต - NANIWA Production</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
+        body { margin: 0; padding: 20px; background: #f4f6f9; color: #222; }
+
+        header {
+            background: #26364d;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin: 5px 0 0; font-size: 0.95rem; color: #d0d7de; }
+
+        .container { width: 99%; max-width: 1800px; margin: 0 auto; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-link {
+            background: #ffffff;
+            color: #26364d;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #dcdfe6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .btn-link:hover { background: #ed8585; color: #ffffff; border-color: #ed8585; }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        /* แถบค้นหาและตัวกรอง */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            background: #f8fafc;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .filter-group input, .filter-group select {
+            padding: 7px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            background: white;
+        }
+
+        button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-excel { background: #2e7d32; color: white; }
+        .btn-excel:hover { background: #1b5e20; }
+        .btn-clear { background: #e53935; color: white; }
+        .btn-clear:hover { background: #c62828; }
+
+        /* ปุ่มในตาราง */
+        .btn-edit { background: #f39c12; color: white; padding: 4px 8px; font-size: 11px; margin-right: 3px; }
+        .btn-edit:hover { background: #d35400; }
+        .btn-delete-row { background: #e74c3c; color: white; padding: 4px 8px; font-size: 11px; }
+        .btn-delete-row:hover { background: #c0392b; }
+
+        /* การจัดตารางตามกลุ่มวันที่ */
+        .date-group-card {
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .date-header {
+            background: #26364d;
+            color: white;
+            padding: 10px 18px;
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        table { width: 100%; min-width: 2500px; border-collapse: collapse; font-size: 13px; }
+        
+        th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: center; white-space: nowrap; }
+        th { background: #3a4d68; color: white; font-weight: 500; }
+        tbody tr:nth-child(even) { background: #f9fbfd; }
+        tbody tr:hover { background: #f0f4f9; }
+
+        .bad-text { color: #d32f2f; font-weight: bold; }
+        .empty-msg { text-align: center; padding: 40px; color: #888; font-size: 1.1rem; }
+
+        /* Style หน้าต่าง Pop-up แก้ไขข้อมูล (Modal) */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); overflow: auto;
+        }
+        .modal-content {
+            background-color: #fff; margin: 3% auto; padding: 20px; border-radius: 10px;
+            width: 90%; max-width: 950px; box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid #26364d; padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .modal-header h3 { margin: 0; color: #26364d; }
+        .form-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;
+        }
+        .form-group { display: flex; flex-direction: column; text-align: left; }
+        .form-group label { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #333; }
+        .form-group input, .form-group select { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+        .modal-actions { text-align: right; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🗄️ ฐานข้อมูลประวัติการผลิต NANIWA</h1>
+        <p>COTTO Sand Core SCG - รายงานสรุปย้อนหลังและการจัดการข้อมูล</p>
+    </header>
+
+    <div class="container">
+        <div class="top-bar">
+            <a href="Position.html" class="btn-link">⬅ ย้อนกลับ</a>
+        </div>
+
+        <div class="card">
+            <!-- ตัวกรองข้อมูลแบบ Dropdown -->
+            <div class="controls-bar">
+                <div class="filter-group">
+                    <label><b>🔍 ตัวกรอง:</b></label>
+                    <input type="date" id="filterDate" onchange="renderData()" title="กรองตามวันที่">
+                    
+                    <select id="filterShift" onchange="renderData()">
+                        <option value="">-- ทุกกะ --</option>
+                        <option value="กะ 1">กะ 1</option>
+                        <option value="กะ 2">กะ 2</option>
+                        <option value="กะ 3">กะ 3</option>
+                    </select>
+
+                    <select id="filterOperator" onchange="renderData()">
+                        <option value="">-- ผู้ผลิตทั้งหมด --</option>
+                    </select>
+
+                    <select id="filterMachine" onchange="renderData()">
+                        <option value="">-- เครื่องทั้งหมด --</option>
+                        <option value="NANIWA 1">NANIWA 1</option>
+                        <option value="NANIWA 2">NANIWA 2</option>
+                        <option value="NANIWA 3">NANIWA 3</option>
+                        <option value="NANIWA 4">NANIWA 4</option>
+                        <option value="NANIWA 5">NANIWA 5</option>
+                        <option value="NANIWA 6">NANIWA 6</option>
+                        <option value="NANIWA 7">NANIWA 7</option>
+                        <option value="NANIWA 8">NANIWA 8</option>
+                    </select>
+
+                    <input type="text" id="filterText" placeholder="ค้นหา Job No. / Part No." onkeyup="renderData()">
+                    <button style="background:#757575; color:white;" onclick="resetFilter()">ล้างตัวกรอง</button>
+                </div>
+                <div>
+                    <button class="btn-excel" onclick="exportToCSV()">📊 Export เป็น CSV (Excel)</button>
+                    <button class="btn-clear" onclick="clearAllRecords()">🗑️ ล้างประวัติทั้งหมด</button>
+                </div>
+            </div>
+
+            <!-- โซนแสดงรายการบันทึก -->
+            <div id="recordsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Pop-up Modal สำหรับแก้ไขข้อมูล -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✏️ แก้ไขข้อมูลการผลิต</h3>
+                <button onclick="closeEditModal()" style="background:#ccc; color:#333; padding:4px 10px;">✕ ปิด</button>
+            </div>
+            <form id="editForm">
+                <div class="form-grid">
+                    <div class="form-group"><label>Date:</label><input type="date" id="editDate"></div>
+                    <div class="form-group">
+                        <label>กะ:</label>
+                        <select id="editShift">
+                            <option value="กะ 1">กะ 1</option>
+                            <option value="กะ 2">กะ 2</option>
+                            <option value="กะ 3">กะ 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>เวลาการผลิต:</label><input type="text" id="editTime"></div>
+                    <div class="form-group"><label>ผู้ผลิต:</label><select id="editOperator"></select></div>
+                    <div class="form-group">
+                        <label>เครื่อง:</label>
+                        <select id="editMachine">
+                            <option value="NANIWA 1">NANIWA 1</option>
+                            <option value="NANIWA 2">NANIWA 2</option>
+                            <option value="NANIWA 3">NANIWA 3</option>
+                            <option value="NANIWA 4">NANIWA 4</option>
+                            <option value="NANIWA 5">NANIWA 5</option>
+                            <option value="NANIWA 6">NANIWA 6</option>
+                            <option value="NANIWA 7">NANIWA 7</option>
+                            <option value="NANIWA 8">NANIWA 8</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Job No.:</label><input type="text" id="editJobNo"></div>
+                    <div class="form-group"><label>Part No.:</label><input type="text" id="editPartNo"></div>
+                    <div class="form-group"><label>น้ำหนัก/ชิ้น (G):</label><input type="number" step="any" id="editWeightG"></div>
+                    <div class="form-group"><label>แผนผลิต (Blow):</label><input type="number" id="editPlanBlow"></div>
+                    <div class="form-group"><label>ผลผลิต (Blow):</label><input type="number" id="editActBlow"></div>
+                    <div class="form-group"><label>ผลผลิต (Pcs.):</label><input type="number" id="editActPcs" oninput="calcEditBadPercent()"></div>
+                    <div class="form-group"><label>งานดี (Blow):</label><input type="number" id="editGoodBlow"></div>
+                    <div class="form-group"><label>งานดี (Pcs.):</label><input type="number" id="editGoodPcs"></div>
+                    <div class="form-group"><label>งานเสีย (Pcs.):</label><input type="number" id="editBadPcs" oninput="calcEditBadPercent()"></div>
+                    <div class="form-group"><label>งานเสีย (%):</label><input type="text" id="editBadPercent" readonly style="background:#eee;"></div>
+                    <div class="form-group"><label>อุณหภูมิแม่พิมพ์ (C):</label><input type="number" step="any" id="editTempMold"></div>
+                    <div class="form-group"><label>เวลาอบ (Sec.):</label><input type="number" step="any" id="editBakeTime"></div>
+                    <div class="form-group"><label>แรงดันลม (Mpa.):</label><input type="number" step="any" id="editAirPress"></div>
+                    <div class="form-group"><label>ทราย (Kg.):</label><input type="number" step="any" id="editSandKg"></div>
+                    <div class="form-group"><label>เรซิ่น (G.):</label><input type="number" step="any" id="editResinG"></div>
+                    <div class="form-group"><label>ฮาร์ดเดนเนอร์ (G.):</label><input type="number" step="any" id="editHardenerG"></div>
+                    <div class="form-group"><label>% เรซิ่น (%):</label><input type="number" step="any" id="editResinPercent"></div>
+                    <div class="form-group"><label>ความแข็ง (Kg./f.):</label><input type="number" step="any" id="editHardness"></div>
+                    <div class="form-group"><label>ล็อต ทราย:</label><input type="text" id="editLotSand"></div>
+                    <div class="form-group"><label>ล็อต เรซิ่น:</label><input type="text" id="editLotResin"></div>
+                    <div class="form-group"><label>ล็อต ฮาร์ดเดนเนอร์:</label><input type="text" id="editLotHardener"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-excel" onclick="saveEdit()">💾 บันทึกการแก้ไข</button>
+                    <button type="button" class="btn-clear" onclick="closeEditModal()">❌ ยกเลิก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentEditTarget = null; // เก็บพิกัดรายการที่กำลังแก้ไข { batchId, itemIndex }
+
+        // 1. โหลดข้อมูลจาก LocalStorage
+        function loadDB() {
+            return JSON.parse(localStorage.getItem("naniwa_production_db") || "[]");
+        }
+
+        // 2. ดึงรายชื่อผู้ผลิตมาใส่ใน Dropdown ทั้งหมด
+        function initOperatorOptions() {
+            const masterPersons = JSON.parse(localStorage.getItem('master_persons')) || [
+                { id: '001', name: 'สมชาย', workSite: 'Core' },
+                { id: '002', name: 'มานี', workSite: 'Core' },
+                { id: '003', name: 'มานะ', workSite: 'Core' }
+            ];
+
+            const db = loadDB();
+            const operatorSet = new Set();
+
+            // ดึงจาก Master
+            masterPersons.forEach(p => { if (p.name) operatorSet.add(p.name); });
+            // ดึงจากประวัติการบันทึก
+            db.forEach(b => b.items.forEach(i => { if (i.operator) operatorSet.add(i.operator); }));
+
+            const filterSelect = document.getElementById("filterOperator");
+            const editSelect = document.getElementById("editOperator");
+
+            filterSelect.innerHTML = `<option value="">-- ผู้ผลิตทั้งหมด --</option>`;
+            editSelect.innerHTML = `<option value="">-- เลือกผู้ผลิต --</option>`;
+
+            operatorSet.forEach(name => {
+                filterSelect.innerHTML += `<option value="${name}">${name}</option>`;
+                editSelect.innerHTML += `<option value="${name}">${name}</option>`;
+            });
+        }
+
+        // 3. แสดงผลข้อมูลโดยเรียงต่อกัน และแบ่งตามวันที่
+        function renderData() {
+            const container = document.getElementById("recordsContainer");
+            const db = loadDB();
+
+            const filterDate = document.getElementById("filterDate").value;
+            const filterShift = document.getElementById("filterShift").value;
+            const filterOperator = document.getElementById("filterOperator").value;
+            const filterMachine = document.getElementById("filterMachine").value;
+            const filterText = document.getElementById("filterText").value.toLowerCase();
+
+            container.innerHTML = "";
+
+            if (db.length === 0) {
+                container.innerHTML = `<div class="empty-msg">📂 ไม่พบประวัติการบันทึกข้อมูลการผลิต</div>`;
+                return;
+            }
+
+            // แปลงโครงสร้างข้อมูลให้อยู่ในรูปรายการเดี่ยวพร้อมระบุตำแหน่งอ้างอิง
+            let allItems = [];
+            db.forEach(batch => {
+                batch.items.forEach((item, index) => {
+                    allItems.push({
+                        ...item,
+                        batchId: batch.id,
+                        itemIndex: index,
+                        savedAt: batch.savedAt
+                    });
+                });
+            });
+
+            // คัดกรองข้อมูลตามฟิลเตอร์
+            const filteredItems = allItems.filter(item => {
+                const matchDate = !filterDate || item.date === filterDate;
+                const matchShift = !filterShift || item.shift === filterShift;
+                const matchOperator = !filterOperator || item.operator === filterOperator;
+                const matchMachine = !filterMachine || item.machine === filterMachine;
+                const matchText = !filterText ||
+                    (item.jobNo && item.jobNo.toLowerCase().includes(filterText)) ||
+                    (item.partNo && item.partNo.toLowerCase().includes(filterText));
+
+                return matchDate && matchShift && matchOperator && matchMachine && matchText;
+            });
+
+            if (filteredItems.length === 0) {
+                container.innerHTML = `<div class="empty-msg">🔍 ไม่พบข้อมูลที่ตรงกับเงื่อนไขการค้นหา</div>`;
+                return;
+            }
+
+            // จัดกลุ่มข้อมูลตาม "วันที่ผลิต" (date)
+            const groupedByDate = {};
+            filteredItems.forEach(item => {
+                const dateKey = item.date || "ไม่ระบุวันที่";
+                if (!groupedByDate[dateKey]) groupedByDate[dateKey] = [];
+                groupedByDate[dateKey].push(item);
+            });
+
+            // เรียงลำดับวันที่ล่าสุดขึ้นก่อน
+            const sortedDates = Object.keys(groupedByDate).sort().reverse();
+
+            sortedDates.forEach(dateStr => {
+                const itemsInDate = groupedByDate[dateStr];
+                const card = document.createElement("div");
+                card.className = "date-group-card";
+
+                let rowsHTML = "";
+                itemsInDate.forEach((item, idx) => {
+                    rowsHTML += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>${item.date || '-'}</td>
+                            <td>${item.shift || '-'}</td>
+                            <td>${item.time || '-'}</td>
+                            <td><b>${item.operator || '-'}</b></td>
+                            <td>${item.machine || '-'}</td>
+                            <td>${item.jobNo || '-'}</td>
+                            <td>${item.partNo || '-'}</td>
+                            <td>${item.weightG || '0'}</td>
+                            <td>${item.planBlow || '0'}</td>
+                            <td>${item.actBlow || '0'}</td>
+                            <td>${item.actPcs || '0'}</td>
+                            <td>${item.goodBlow || '0'}</td>
+                            <td>${item.goodPcs || '0'}</td>
+                            <td>${item.badPcs || '0'}</td>
+                            <td class="bad-text">${item.badPercent || '0.00%'}</td>
+                            <td>${item.tempMold || '-'}</td>
+                            <td>${item.bakeTime || '-'}</td>
+                            <td>${item.airPress || '-'}</td>
+                            <td>${item.sandKg || '-'}</td>
+                            <td>${item.resinG || '-'}</td>
+                            <td>${item.hardenerG || '-'}</td>
+                            <td>${item.resinPercent || '-'}</td>
+                            <td>${item.hardness || '-'}</td>
+                            <td>${item.lotSand || '-'}</td>
+                            <td>${item.lotResin || '-'}</td>
+                            <td>${item.lotHardener || '-'}</td>
+                            <td>
+                                <button class="btn-edit" onclick="openEditModal(${item.batchId}, ${item.itemIndex})">✏️ แก้ไข</button>
+                                <button class="btn-delete-row" onclick="deleteItem(${item.batchId}, ${item.itemIndex})">🗑️ ลบ</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="date-header">
+                        <span>📅 วันที่ผลิต: ${dateStr}</span>
+                        <span style="font-size:0.85rem; font-weight:normal;">(รวม ${itemsInDate.length} รายการ)</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Date</th>
+                                    <th>กะ</th>
+                                    <th>เวลาการผลิต</th>
+                                    <th>ผู้ผลิต</th>
+                                    <th>เครื่อง</th>
+                                    <th>Job No.</th>
+                                    <th>Part No.</th>
+                                    <th>น้ำหนัก/ชิ้น (G)</th>
+                                    <th>แผนผลิต (Blow)</th>
+                                    <th>ผลผลิต (Blow)</th>
+                                    <th>ผลผลิต (Pcs.)</th>
+                                    <th>งานดี (Blow)</th>
+                                    <th>งานดี (Pcs.)</th>
+                                    <th>งานเสีย (Pcs.)</th>
+                                    <th>งานเสีย (%)</th>
+                                    <th>อุณหภูมิแม่พิมพ์ (C)</th>
+                                    <th>เวลาอบ (Sec.)</th>
+                                    <th>แรงดันลม (Mpa.)</th>
+                                    <th>ทราย (Kg.)</th>
+                                    <th>เรซิ่น (G.)</th>
+                                    <th>ฮาร์ดเดนเนอร์ (G.)</th>
+                                    <th>% เรซิ่น (%)</th>
+                                    <th>ความแข็ง (Kg./f.)</th>
+                                    <th>ล็อต ทราย</th>
+                                    <th>ล็อต เรซิ่น</th>
+                                    <th>ล็อต ฮาร์ดเดนเนอร์</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // 4. ลบข้อมูลรายบรรทัด
+        function deleteItem(batchId, itemIndex) {
+            if (!confirm("คุณต้องการลบรายการนี้ใช่หรือไม่?")) return;
+
+            let db = loadDB();
+            const batch = db.find(b => b.id === batchId);
+
+            if (batch) {
+                batch.items.splice(itemIndex, 1);
+                // ถ้าใน Batch นั้นไม่มีข้อมูลเหลือแล้ว ให้ลบ Batch ออกด้วย
+                if (batch.items.length === 0) {
+                    db = db.filter(b => b.id !== batchId);
+                }
+                localStorage.setItem("naniwa_production_db", JSON.stringify(db));
+                initOperatorOptions();
+                renderData();
+            }
+        }
+
+        // 5. เปิดหน้าต่าง Pop-up แก้ไขข้อมูล
+        function openEditModal(batchId, itemIndex) {
+            const db = loadDB();
+            const batch = db.find(b => b.id === batchId);
+            if (!batch || !batch.items[itemIndex]) return;
+
+            const item = batch.items[itemIndex];
+            currentEditTarget = { batchId, itemIndex };
+
+            document.getElementById("editDate").value = item.date || "";
+            document.getElementById("editShift").value = item.shift || "กะ 1";
+            document.getElementById("editTime").value = item.time || "";
+            document.getElementById("editOperator").value = item.operator || "";
+            document.getElementById("editMachine").value = item.machine || "NANIWA 1";
+            document.getElementById("editJobNo").value = item.jobNo || "";
+            document.getElementById("editPartNo").value = item.partNo || "";
+            document.getElementById("editWeightG").value = item.weightG || 0;
+            document.getElementById("editPlanBlow").value = item.planBlow || 0;
+            document.getElementById("editActBlow").value = item.actBlow || 0;
+            document.getElementById("editActPcs").value = item.actPcs || 0;
+            document.getElementById("editGoodBlow").value = item.goodBlow || 0;
+            document.getElementById("editGoodPcs").value = item.goodPcs || 0;
+            document.getElementById("editBadPcs").value = item.badPcs || 0;
+            document.getElementById("editBadPercent").value = item.badPercent || "0.00%";
+            document.getElementById("editTempMold").value = item.tempMold || "";
+            document.getElementById("editBakeTime").value = item.bakeTime || "";
+            document.getElementById("editAirPress").value = item.airPress || "";
+            document.getElementById("editSandKg").value = item.sandKg || "";
+            document.getElementById("editResinG").value = item.resinG || "";
+            document.getElementById("editHardenerG").value = item.hardenerG || "";
+            document.getElementById("editResinPercent").value = item.resinPercent || "";
+            document.getElementById("editHardness").value = item.hardness || "";
+            document.getElementById("editLotSand").value = item.lotSand || "";
+            document.getElementById("editLotResin").value = item.lotResin || "";
+            document.getElementById("editLotHardener").value = item.lotHardener || "";
+
+            document.getElementById("editModal").style.display = "block";
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+            currentEditTarget = null;
+        }
+
+        function calcEditBadPercent() {
+            const act = parseFloat(document.getElementById("editActPcs").value) || 0;
+            const bad = parseFloat(document.getElementById("editBadPcs").value) || 0;
+            let percent = 0;
+            if (act > 0) percent = (bad / act) * 100;
+            document.getElementById("editBadPercent").value = percent.toFixed(2) + "%";
+        }
+
+        // 6. บันทึกการแก้ไขลง LocalStorage
+        function saveEdit() {
+            if (!currentEditTarget) return;
+
+            let db = loadDB();
+            const batch = db.find(b => b.id === currentEditTarget.batchId);
+            if (!batch || !batch.items[currentEditTarget.itemIndex]) return;
+
+            batch.items[currentEditTarget.itemIndex] = {
+                date: document.getElementById("editDate").value,
+                shift: document.getElementById("editShift").value,
+                time: document.getElementById("editTime").value,
+                operator: document.getElementById("editOperator").value,
+                machine: document.getElementById("editMachine").value,
+                jobNo: document.getElementById("editJobNo").value,
+                partNo: document.getElementById("editPartNo").value,
+                weightG: document.getElementById("editWeightG").value,
+                planBlow: document.getElementById("editPlanBlow").value,
+                actBlow: document.getElementById("editActBlow").value,
+                actPcs: document.getElementById("editActPcs").value,
+                goodBlow: document.getElementById("editGoodBlow").value,
+                goodPcs: document.getElementById("editGoodPcs").value,
+                badPcs: document.getElementById("editBadPcs").value,
+                badPercent: document.getElementById("editBadPercent").value,
+                tempMold: document.getElementById("editTempMold").value,
+                bakeTime: document.getElementById("editBakeTime").value,
+                airPress: document.getElementById("editAirPress").value,
+                sandKg: document.getElementById("editSandKg").value,
+                resinG: document.getElementById("editResinG").value,
+                hardenerG: document.getElementById("editHardenerG").value,
+                resinPercent: document.getElementById("editResinPercent").value,
+                hardness: document.getElementById("editHardness").value,
+                lotSand: document.getElementById("editLotSand").value,
+                lotResin: document.getElementById("editLotResin").value,
+                lotHardener: document.getElementById("editLotHardener").value
+            };
+
+            localStorage.setItem("naniwa_production_db", JSON.stringify(db));
+            closeEditModal();
+            initOperatorOptions();
+            renderData();
+            alert("บันทึกการแก้ไขข้อมูลเรียบร้อยแล้ว");
+        }
+
+        // 7. ล้างการกรองข้อมูล
+        function resetFilter() {
+            document.getElementById("filterDate").value = "";
+            document.getElementById("filterShift").value = "";
+            document.getElementById("filterOperator").value = "";
+            document.getElementById("filterMachine").value = "";
+            document.getElementById("filterText").value = "";
+            renderData();
+        }
+
+        // 8. ล้างประวัติการบันทึกทั้งหมด
+        function clearAllRecords() {
+            if (confirm("⚠️ เตือน: คุณต้องการล้างประวัติการบันทึกทั้งหมดใช่หรือไม่? (ไม่สามารถย้อนกลับได้)")) {
+                localStorage.removeItem("naniwa_production_db");
+                initOperatorOptions();
+                renderData();
+            }
+        }
+
+        // 9. ฟังก์ชัน Export เป็นไฟล์ CSV
+        function exportToCSV() {
+            const db = loadDB();
+            if (db.length === 0) {
+                alert("ไม่มีข้อมูลสำหรับส่งออก");
+                return;
+            }
+
+            let csv = "\uFEFF";
+            csv += "SavedAt,Date,Shift,Time,Operator,Machine,JobNo,PartNo,Weight_G,Plan_Blow,Act_Blow,Act_Pcs,Good_Blow,Good_Pcs,Bad_Pcs,Bad_Percent,TempMold,BakeTime,AirPress,Sand_Kg,Resin_G,Hardener_G,Resin_Percent,Hardness,LotSand,LotResin,LotHardener\n";
+
+            db.forEach(batch => {
+                batch.items.forEach(item => {
+                    const row = [
+                        `"${batch.savedAt}"`,
+                        `"${item.date || ''}"`,
+                        `"${item.shift || ''}"`,
+                        `"${item.time || ''}"`,
+                        `"${item.operator || ''}"`,
+                        `"${item.machine || ''}"`,
+                        `"${item.jobNo || ''}"`,
+                        `"${item.partNo || ''}"`,
+                        item.weightG || 0,
+                        item.planBlow || 0,
+                        item.actBlow || 0,
+                        item.actPcs || 0,
+                        item.goodBlow || 0,
+                        item.goodPcs || 0,
+                        item.badPcs || 0,
+                        `"${item.badPercent || '0.00%'}"`,
+                        item.tempMold || '',
+                        item.bakeTime || '',
+                        item.airPress || '',
+                        item.sandKg || '',
+                        item.resinG || '',
+                        item.hardenerG || '',
+                        item.resinPercent || '',
+                        item.hardness || '',
+                        `"${item.lotSand || ''}"`,
+                        `"${item.lotResin || ''}"`,
+                        `"${item.lotHardener || ''}"`
+                    ];
+                    csv += row.join(",") + "\n";
+                });
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `NANIWA_Production_Export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // เริ่มต้นทำงาน
+        initOperatorOptions();
+        renderData();
+    </script>
+
+</body>
+
+</html>

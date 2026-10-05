@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - COTTO Foundry Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
+        body { background: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .auth-card { background: white; padding: 35px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: 100%; max-width: 420px; border-top: 5px solid #26364d; }
+        .auth-header { text-align: center; margin-bottom: 25px; }
+        .auth-header h2 { color: #26364d; font-size: 22px; font-weight: 700; margin-bottom: 5px; }
+        .auth-header p { color: #666; font-size: 14px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .form-group input:focus { border-color: #26364d; }
+        .form-options { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-bottom: 20px; }
+        .form-options label { color: #555; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .form-options a { color: #1976d2; text-decoration: none; font-weight: 500; }
+        .form-options a:hover { text-decoration: underline; }
+        .btn-submit { width: 100%; background: #26364d; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-submit:hover { background: #1a2536; }
+        .auth-footer { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+        .auth-footer a { color: #1976d2; text-decoration: none; font-weight: 600; }
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>COTTO Foundry Shop</h2> 
+            <p>กรุณากรอกข้อมูลเพื่อเข้าสู่ระบบ</p>
+        </div>
+
+        <form action="index.html" method="GET">
+            <div class="form-group">
+                <label for="username">👤 รหัสพนักงาน / อีเมล</label>
+                <input type="text" id="username" name="username" placeholder="เช่น 561234 หรือ email@scg.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔒 รหัสผ่าน</label>
+                <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่าน" required>
+            </div>
+
+            <div class="form-options">
+                <label><input type="checkbox" name="remember"> จดจำฉันไว้ในระบบ</label>
+                <a href="forgot-password.html">ลืมรหัสผ่าน?</a>
+            </div>
+
+            <button type="submit" class="btn-submit">🔑 เข้าสู่ระบบ</button>
+        </form>
+
+        <div class="auth-footer">
+            ยังไม่มีบัญชีผู้ใช้งาน? <a href="register.html">สมัครสมาชิกที่นี่</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

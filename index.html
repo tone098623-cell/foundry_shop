@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COTTO Forming - หน้าหลัก</title>
+
+    <!-- นำเข้าฟอนต์ Google Font (Sarabun) -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- เชื่อมโยงไฟล์ CSS -->
+    <link rel="stylesheet" href="Index.css">
+
+    <!-- สไตล์จัดวาง Logo และ Header (นำไปใส่ไว้ใน Index.css ได้เช่นกันครับ) -->
+    <style>
+        .main-header {
+            background-color: #26364d;
+            color: white;
+            padding: 15px 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 18px; /* ระยะห่างระหว่างโลโก้กับข้อความ */
+            max-width: 11200px;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            height: 150px; /* ปรับขนาดความสูงโลโก้ */
+            width: auto;
+            border-radius: 6px;
+            background: #fff; /* ใส่พื้นหลังขาวให้โลโก้เด่นชัดขึ้น */
+            padding: 0px 0px;
+            object-fit: contain;
+        }
+
+        .header-text h2 {
+            margin: 0;
+            font-size: 50px;
+            align-items: center;
+            font-weight: 7000;
+            line-height: 1.2;
+            color: #ffffff;
+        }
+
+        .header-text p {
+            margin: 3px 0 0 0;
+            font-size: 13px;
+            color: #d1d5db;
+            font-weight: 300;
+        }
+
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="main-header">
+        <div class="header-content">
+            <!-- โลโก้ SCG Decor ด้านซ้าย -->
+            <img src="img/logo-social.jpg" alt="SCG Decor Logo" class="header-logo">
+            
+            <!-- ข้อความหัวเว็บ ด้านขวา -->
+            <div class="header-text">
+                <h2>COTTO Foundry Shop</h2>
+                <p>Production Information System</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <section class="main-container">
+
+        <!-- MENU (NAV) -->
+        <nav class="sidebar-nav">
+            <div class="menu-title">📌 Main Menu</div>
+            <ul class="nav-list">
+                <li>
+                    <a href="index.html" class="nav-link active">
+                        <span class="icon">🏠</span>
+                        <span>หน้าแรก Foundry Shop</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="Position.html" class="nav-link">
+                        <span class="icon">📝</span>
+                        <span>กรอกข้อมูลการผลิต</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="กรอกชื่อ.html" class="nav-link">
+                        <span class="icon">📄</span>
+                        <span>ระบบขอโอที (Overtime)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="บันทึกข้อมูล.html" class="nav-link">
+                        <span class="icon">🗄️</span>
+                        <span>Over time Record (โอที)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="เพิ่มข้อมูลรายชื่อ.html" class="nav-link">
+                        <span class="icon">🗄️</span>
+                        <span>เพิ่มรายชื่อ พนักงาน-ผู้รับเหมา (DATA)</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- ARTICLE (CONTENT AREA) -->
+        <article class="content-area">
+            <div class="welcome-card">
+                <h1>ยินดีต้อนรับสู่ระบบ COTTO Foundry Shop</h1>
+                
+                <div class="logo-wrapper">
+                    <img src="img/logo_cotto.jpg" alt="COTTO Sand Core - ภาพจำลองระบบ">
+                </div>
+
+                <div class="info-box">
+                    <strong>💡 คำแนะนำเบื้องต้น:</strong> 
+                    <p>คุณสามารถคลิกที่เมนู <strong>"กรอกข้อมูลการผลิต"</strong> ทางด้านซ้ายมือ เพื่อเข้าไปทดลองกรอกข้อมูล และดูตารางสรุปผลการทำงานได้ทันที</p>
+                </div>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <p>© 2024 COTTO Sand Core SCG - Production Control System</p>
+    </footer>
+
+</body>
+
+</html>

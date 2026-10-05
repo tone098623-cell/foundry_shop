@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบกรอก OT + รถรับส่ง</title>
+    <link rel="stylesheet" href="OT.css">
+    <!-- ใช้ฟอนต์ Google Fonts เพื่อความสวยงาม (คล้ายต้นฉบับ) -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Header Section -->
+        <header class="header-card">
+            <div class="logo-area">
+                <h1>SCG<span>decor</span></h1>
+                <span class="slogan">CREATE YOUR LIFE PASSION</span>
+            </div>
+            <div class="header-text">
+                <h2>ระบบกรอก OT + รถรับส่ง</h2>
+                <p>เลือกวันที่ &rarr; เลือกแผนก &rarr; คลิกเลือกพนักงานที่ทำ OT &rarr; ระบุจุดขึ้น/ลงรถและเวลาเข้า/ออก</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active">หน้าจอ OT</button>
+            <button class="tab-btn">Target / ปฏิทินบริษัท</button>
+        </div>
+
+        <!-- Section 1: Dashboard -->
+        <section class="card">
+            <h3 class="card-title">Dashboard สรุปการขึ้นรถ</h3>
+            <div class="card-body">
+                <div class="form-row grid-5">
+                    <div class="form-group">
+                        <label>ตั้งแต่วันที่</label>
+                        <input type="date" class="form-control" placeholder="mm/dd/yyyy">
+                    </div>
+                    <div class="form-group">
+                        <label>ถึงวันที่</label>
+                        <input type="date" class="form-control" value="2026-10-03">
+                    </div>
+                    <div class="form-group">
+                        <label>แผนก</label>
+                        <select class="form-control">
+                            <option>ทุกแผนก</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>เวลาเข้า</label>
+                        <select class="form-control">
+                            <option>ทุกเวลา</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>เวลาออก</label>
+                        <div class="input-with-btn">
+                            <select class="form-control">
+                                <option>ทุกเวลา</option>
+                            </select>
+                            <button class="btn btn-green">อัปเดต Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-table-container">
+                    <div class="sub-table-header">รวมตามจุดขึ้นรถ / จำนวนคน</div>
+                    <table class="sub-table">
+                        <thead>
+                            <tr>
+                                <th>จุดขึ้นรถ</th>
+                                <th>จำนวนคน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">ไม่มีข้อมูล</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Filter Data -->
+        <section class="card">
+            <div class="card-body pb-0">
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>วันที่ OT</label>
+                        <input type="date" class="form-control" value="2026-10-03">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>แผนก</label>
+                        <select class="form-control">
+                            <option>ทุกแผนก</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                        <label>ค้นหารหัส / ชื่อ</label>
+                        <div class="input-with-btn">
+                            <input type="text" class="form-control" placeholder="เช่น สมชาย หรือ FO001">
+                            <button class="btn btn-light">วันนี้</button>
+                            <button class="btn btn-green">แสดงข้อมูล</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-pills mt-3">
+                    <button class="pill active">ทุกแผนก</button>
+                    <button class="pill">FO</button>
+                    <button class="pill">MC</button>
+                    <button class="pill">PO</button>
+                    <button class="pill">PL</button>
+                    <button class="pill">AS</button>
+                    <button class="pill">PWH</button>
+                    <button class="pill">ZN</button>
+                    <button class="pill">ETT</button>
+                </div>
+
+                <div class="summary-pills mt-3">
+                    <span class="summary-pill">วันที่: 2026-10-03</span>
+                    <span class="summary-pill">รายชื่อ: 17</span>
+                    <span class="summary-pill">เลือก OT: 0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Data Table -->
+        <section class="card">
+            <div class="card-body table-section">
+                <div class="table-actions">
+                    <button class="btn btn-light-blue">คลิกเลือก OT ทั้งหมดที่แสดง</button>
+                    <button class="btn btn-light-gray">ยกเลิกทั้งหมด</button>
+                    <button class="btn btn-blue">บันทึก OT</button>
+                </div>
+                <p class="helper-text mt-2 mb-3 text-muted">ช่องรถรับส่งและเวลา จะเปิดใช้งานเฉพาะคนที่คลิกเลือก OT</p>
+
+                <div class="table-responsive">
+                    <table class="main-table">
+                        <thead>
+                            <tr>
+                                <th width="40">OT</th>
+                                <th>รหัส</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>แผนก</th>
+                                <th>จุดขึ้นรถ</th>
+                                <th>จุดลงรถ</th>
+                                <th>เวลาเข้า</th>
+                                <th>เวลาออก</th>
+                                <th width="80" class="text-center">ชั่วโมงทำงาน<br>ปกติ</th>
+                                <th width="80" class="text-center">ชั่วโมง<br>OT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            <tr>
+                                <td class="text-center"><input type="checkbox"></td>
+                                <td>FO001</td>
+                                <td><b>สมชาย ใจดี</b></td>
+                                <td>FO</td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือก --</option></select>
+                                        <input type="text" class="form-control input-sm" value="พิมพ์จุดรับส่ง">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือก --</option></select>
+                                        <input type="text" class="form-control input-sm" value="พิมพ์จุดรับส่ง">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือกเวลา --</option></select>
+                                        <input type="text" class="form-control input-sm time-input" placeholder="HH:MM">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือกเวลา --</option></select>
+                                        <input type="text" class="form-control input-sm time-input" placeholder="HH:MM">
+                                    </div>
+                                </td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr>
+                                <td class="text-center"><input type="checkbox"></td>
+                                <td>FO002</td>
+                                <td><b>สุพัตรา แก้วคำ</b></td>
+                                <td>FO</td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือก --</option></select>
+                                        <input type="text" class="form-control input-sm" value="พิมพ์จุดรับส่ง">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือก --</option></select>
+                                        <input type="text" class="form-control input-sm" value="พิมพ์จุดรับส่ง">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือกเวลา --</option></select>
+                                        <input type="text" class="form-control input-sm time-input" placeholder="HH:MM">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex-inputs">
+                                        <select class="form-control input-sm"><option>-- เลือกเวลา --</option></select>
+                                        <input type="text" class="form-control input-sm time-input" placeholder="HH:MM">
+                                    </div>
+                                </td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>
